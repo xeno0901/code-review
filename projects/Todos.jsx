@@ -4,7 +4,7 @@ const TitleComponent = () => (
     <h2>강의목표</h2>
 );
 
-class Todos extends React.Component {
+class TodosTemp extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -13,15 +13,15 @@ class Todos extends React.Component {
   }
 }
 
-export const LectureGoal = ( props ) => (
-  <div className="LectureGoal">
+export const Todos = ( props ) => (
+  <div className="Todos">
     <h2>{props.title}</h2>
     <ul>
       {props.items.map((item, index) =>{
-        return <li key={index}><input type={"checkbox"}/> {item}</li>;
+        return <li key={index}><input type={"checkbox"} checked={item.completed}/> {item.name}</li>;
       })}
     </ul>
     </div>
 );
 
-export default LectureGoal;
+export default Todos;
