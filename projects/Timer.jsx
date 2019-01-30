@@ -9,40 +9,49 @@ class Timer extends React.Component {
   constructor(props) {
     super(props);
 
-    const mtNow = moment();
     const {expireDate} = this.props;
     const mtExpire = moment(expireDate);
 
     this.state = {
-      mtNowStr: `현재 시간은 ${mtNow.format('A h:mm:ss')}`,
+      mtNow: moment(),
       mtExpireStr: `${mtExpire.fromNow()}에 강의를 종료합니다.`,
     };
   }
 
   componentDidMount() {
-    const Timehandler = setInterval(() => {
+    this.nTimer = setInterval(() => {
       const mtNow = moment();
       const {expireDate} = this.props;
       const mtExpire = moment(expireDate);
 
       this.setState({
-        mtNowStr: `현재 시간은 ${mtNow.format('A h:mm:ss')}`,
+        mtNow: moment(),
       });
-
-      if (mtNow > mtExpire) {
-        clearInterval(Timehandler);
-        this.setState({
-          mtExpireStr: `강의가 종료되었습니다.`,
-        });
-      }
     }, 1000);
   }
 
+  componentDidUpdate() {
+    console.log('componentDidUpdate');
+    const mtNow = moment();
+    const {expireDate, onExpired} = this.props;
+    const mtExpire = moment(expireDate);
+
+    if (mtNow > mtExpire) {
+      clearInterval(this.nTimer);
+      onExpired(': Timeout');
+    }
+  }
+
   render() {
+    const mtNow = moment();
+    const {expireDate, onExpired} = this.props;
+    const mtExpire = moment(expireDate);
+    const isExpired = mtExpire < mtNow;
+
     return (
       <div className="Timer">
-        <div>{this.state.mtNowStr}</div>
-        <div>{this.state.mtExpireStr} </div>
+        <div>{`현재 시간은 ${mtNow.format('A h:mm:ss')}`}</div>
+        {isExpired ? <div>{'강의가 종료되었습니다.'} </div> : <div>{`${mtExpire.fromNow()}에 강의를 종료합니다.`} </div>}
       </div>
     );
   }
